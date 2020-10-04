@@ -6,9 +6,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EmployeeRepository() {
+class EmployeeRepository(val service : EmployeeService) {
     fun getMutableLiveData(onResult: (isSuccess: Boolean, response: EmployeeDBResponse?) -> Unit) {
-        RetrofitClient.instance.getEmployees().enqueue(object : Callback<EmployeeDBResponse> {
+        service.getEmployees().enqueue(object : Callback<EmployeeDBResponse> {
             override fun onResponse(
                 call: Call<EmployeeDBResponse>?,
                 response: Response<EmployeeDBResponse>?
@@ -24,13 +24,5 @@ class EmployeeRepository() {
             }
 
         })
-    }
-
-    companion object {
-        private var INSTANCE: EmployeeRepository? = null
-        fun getInstance() = INSTANCE
-            ?: EmployeeRepository().also {
-                INSTANCE = it
-            }
     }
 }

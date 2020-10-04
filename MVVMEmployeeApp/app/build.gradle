@@ -27,6 +27,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     dataBinding {
         enabled = true
     }
@@ -64,5 +67,12 @@ dependencies {
     //OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
+
+    implementation "org.koin:koin-android:2.1.6"
+    implementation "org.koin:koin-core:2.1.6"
+    implementation "org.koin:koin-core-ext:2.1.6"
+    implementation "org.koin:koin-android-viewmodel:2.1.6"
+    implementation "org.koin:koin-androidx-viewmodel:2.1.6"
+    implementation "org.koin:koin-androidx-ext:2.1.6"
 
 }

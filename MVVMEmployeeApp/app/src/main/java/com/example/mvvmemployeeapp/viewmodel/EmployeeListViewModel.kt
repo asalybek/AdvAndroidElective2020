@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import com.example.mvvmemployeeapp.service.model.Employee
 import com.example.mvvmemployeeapp.service.repository.EmployeeRepository
 
-class EmployeeListViewModel : BaseViewModel() {
+class EmployeeListViewModel(val repoListRepository: EmployeeRepository) : BaseViewModel() {
     val employeeListLive = MutableLiveData<List<Employee>>()
 
     fun fetchEmployeeList() {
         dataLoading.value = true
-        EmployeeRepository.getInstance().getMutableLiveData() { isSuccess, response ->
+        repoListRepository.getMutableLiveData() { isSuccess, response ->
             dataLoading.value = false
             if (isSuccess) {
                 employeeListLive.value = response?.data

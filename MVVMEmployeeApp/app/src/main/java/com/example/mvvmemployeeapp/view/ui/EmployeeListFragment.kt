@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mvvmemployeeapp.databinding.FragmentEmployeeListBinding
 import com.example.mvvmemployeeapp.view.adapter.EmployeeListAdapter
 import com.example.mvvmemployeeapp.viewmodel.EmployeeListViewModel
 import kotlinx.android.synthetic.main.fragment_employee_list.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EmployeeListFragment : Fragment() {
     private lateinit var viewDataBinding: FragmentEmployeeListBinding
     private lateinit var adapter: EmployeeListAdapter
-
+    private val repoListViewModel: EmployeeListViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,11 +25,9 @@ class EmployeeListFragment : Fragment() {
     ): View? {
 
         viewDataBinding = FragmentEmployeeListBinding.inflate(inflater, container, false).apply {
-            viewmodel =
-                ViewModelProviders.of(this@EmployeeListFragment)
-                    .get(EmployeeListViewModel::class.java)
             lifecycleOwner = viewLifecycleOwner
         }
+        viewDataBinding.viewmodel = repoListViewModel
         return viewDataBinding.root
     }
 

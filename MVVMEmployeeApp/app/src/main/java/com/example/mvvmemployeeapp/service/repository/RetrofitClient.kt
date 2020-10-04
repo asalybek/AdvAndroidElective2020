@@ -1,7 +1,9 @@
 package com.example.mvvmemployeeapp.service.repository
 
+import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.GsonBuilder
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,32 +14,36 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
     private val BASE_URL = "https://reqres.in/api/"
 
-    val instance: EmployeeService = Retrofit.Builder().run {
-        val gson = GsonBuilder()
-            .enableComplexMapKeySerialization()
-            .setPrettyPrinting()
-            .create()
-        baseUrl(BASE_URL)
-        addConverterFactory(GsonConverterFactory.create(gson))
-        client(getOkHttp())
-        build()
-    }.create(EmployeeService::class.java)
-
-    private fun getOkHttp(): OkHttpClient {
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(getLoggingInterceptor())
-        return okHttpClient.build()
+    fun create(okHttpClient: OkHttpClient): EmployeeService {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+            .create(EmployeeService::class.java)
     }
 
-    private fun getLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor(logger = object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                Log.d("OkHttp", message)
-            }
-        }).apply {
-            level = HttpLoggingInterceptor.Level.BODY
+    fun getOkHttpClient(authInterceptor: Interceptor): OkHttpClient {
+        val logginInterceptor = HttpLoggingInterceptor()
+        logginInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val builder = OkHttpClient.Builder()
+        return builder.addInterceptor(logginInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .addInterceptor(authInterceptor)
+            .build()
+    }
+
+    fun getAuthInterceptor(sharedPreferences: SharedPreferences): Interceptor {
+        return Interceptor { chain ->
+            val newRequest = chain.request()
+                .newBuilder()
+                .addHeader("Authorization", sharedPreferences.getString("token", "")!!)
+                .build()
+
+            chain.proceed(newRequest)
         }
     }
 }
