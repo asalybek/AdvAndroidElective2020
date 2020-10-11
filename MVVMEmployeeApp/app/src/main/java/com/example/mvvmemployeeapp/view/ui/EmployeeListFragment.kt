@@ -42,7 +42,7 @@ class EmployeeListFragment : Fragment() {
 
 
     private fun setObservers() {
-        viewDataBinding.viewmodel?.employeeListLive?.observe(viewLifecycleOwner, Observer {
+        viewDataBinding.viewmodel?.fetchEmployeeList()?.observe(viewLifecycleOwner, Observer {
             adapter.updateRepoList(it)
         })
 

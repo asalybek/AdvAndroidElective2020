@@ -10,10 +10,16 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        startKoin{
+        startKoin {
             androidLogger(Level.NONE)
             androidContext(this@MainApplication)
-            modules(viewModelModule, repositoryModule, networkModule, sharedPrefModule)
+            modules(
+                viewModelModule,
+                useCaseModule,
+                repositoryModule,
+                networkModule,
+                sharedPrefModule
+            )
         }
     }
 }

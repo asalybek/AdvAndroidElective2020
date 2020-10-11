@@ -1,22 +1,12 @@
 package com.example.mvvmemployeeapp.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.mvvmemployeeapp.domain.GetRepoListUseCase
 import com.example.mvvmemployeeapp.service.model.Employee
-import com.example.mvvmemployeeapp.service.repository.EmployeeRepository
 
-class EmployeeListViewModel(val repoListRepository: EmployeeRepository) : BaseViewModel() {
-    val employeeListLive = MutableLiveData<List<Employee>>()
-
-    fun fetchEmployeeList() {
-        dataLoading.value = true
-        repoListRepository.getMutableLiveData() { isSuccess, response ->
-            dataLoading.value = false
-            if (isSuccess) {
-                employeeListLive.value = response?.data
-                empty.value = false
-            } else {
-                empty.value = true
-            }
-        }
+class EmployeeListViewModel(private val getRepoListUseCase: GetRepoListUseCase) : BaseViewModel() {
+    fun fetchEmployeeList(): LiveData<List<Employee>> {
+        return getRepoListUseCase.getRepoList()
     }
 }
