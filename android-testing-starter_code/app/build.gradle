@@ -6,6 +6,11 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
+    testOptions.unitTests {
+        includeAndroidResources = true
+        returnDefaultValues = true
+    }
+
     defaultConfig {
         applicationId "com.example.android.architecture.blueprints.reactive"
         minSdkVersion rootProject.minSdkVersion
@@ -88,5 +93,7 @@ dependencies {
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
 
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
 
 }
